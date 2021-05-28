@@ -1,0 +1,76 @@
+table {
+  width: 100%;
+}
+
+.md-pagination-wrapper {
+  width: auto !important;
+}
+
+.mat-row:nth-child(2n) {
+  background-color: #7ba1bb;
+  color: #107be6;
+}
+
+.mat-row:nth-child(2n + 1) {
+  background-color: #fdfdfb;
+}
+
+.mat-header-cell {
+  color: #5e5b5b;
+  background-color: aqua;
+  font-size: 20px;
+  border-bottom-color: rgba(21, 35, 156, 0.12);
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mat-paginator-container {
+  // align-content: flex-start !important;
+
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  min-height: 56px !important;
+  padding: 0 8px !important;
+  flex-wrap: wrap-reverse !important;
+  width: 100% !important;
+}
+
+.mat-paginator-page-size {
+  justify-content: flex-start !important;
+  align-self: flex-start !important;
+  margin-left: 10px;
+}
+
+.mat-paginator-range-actions {
+  margin-left: 65%;
+  align-items: center;
+}
+
+// .mat-paginator-navigation-previous {
+//   margin-right: 150px;
+// }
+
+.mat-paginator-navigation-previous:before {
+  content: "Previous";
+}
+
+.mat-paginator-navigation-next:after {
+  content: "Next";
+  margin-left: 50px;
+}
+
+.mat-paginator-icon {
+  display: none;
+}
+
+input.ng-touched.ng-invalid {
+  border: 1px solid red;
+}
+input.ng-touched.ng-valid {
+  border: 1px solid forestgreen;
+}

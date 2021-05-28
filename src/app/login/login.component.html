@@ -1,0 +1,99 @@
+
+<div class="container main mt-5 h-100">
+	<div class="d-flex justify-content-center h-100">
+		<div class="card">
+			<div class="card-header">
+				<h3>Sign In</h3>
+				<div class="d-flex justify-content-end social_icon">
+					<span><i class="fab fa-facebook-square"></i></span>
+					<span><i class="fab fa-google-plus-square"></i></span>
+					<span><i class="fab fa-twitter-square"></i></span>
+				</div>
+			</div>
+			<div class="card-body">
+				<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
+					<div class="input-group mb-3 ">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-user"></i></span>
+						</div>
+
+						<input type="text" class="form-control" placeholder="username" formControlName="username">
+
+					</div>
+					<div class="input-group mb-3">
+						<div class="input-group-prepend">
+							<span class="input-group-text"><i class="fas fa-key"></i></span>
+						</div>
+
+						<input type="password" class="form-control" placeholder="password" formControlName="password">
+					</div>
+					<!-- <div class="row align-items-center remember">
+						<input type="checkbox">Remember Me
+					</div> -->
+					<div class="">
+						<input type="submit" value="Login" class="btn  login_btn" [disabled]="loading">
+					</div>
+				</form>
+			</div>
+			<div class="card-footer">
+				<div class="d-flex justify-content-center links">
+					Don't have an account?<a  (click)="openVerticallyCentered(registercontent)">Sign Up</a>
+				</div>
+				<div class="d-flex justify-content-center">
+					<a href="#">Forgot your password?</a>
+				</div>
+
+        <ng-template #registercontent let-modal>
+          <form #registerForm="ngForm" (ngSubmit)="registerUser(registerForm)">
+
+            <div class="modal-header">
+            <h4 class="modal-title">Sign Up</h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+
+          <div class="modal-body" >
+
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input type="text" class="form-control" name="Username" ngModel required>
+            </div>
+            <div class="form-group">
+              <label for="Email">Email</label>
+              <input type="email" class="form-control" name="Email" ngModel #email="ngModel" required email>
+            </div >
+            <div class="form-group" *ngIf="email.touched && !email.valid">
+              <p style="color: red;">Please enter valid email address</p>
+            </div>
+
+            <div class="form-group">
+              <label for="Password">Password</label>
+              <input type="password" class="form-control" name="Password" ngModel #Password= "ngModel" required >
+            </div>
+            <div class="form-group">
+              <label for="ConfirmPassword">Confirm Password</label>
+              <input type="password" class="form-control" name="Confirmpassword" ngModel #Confirmpassword= "ngModel" required>
+            </div>
+            <div   *ngIf="Confirmpassword.touched && Password.value !== Confirmpassword.value"  class="form-group">
+              <p style="color: red;">Password and Confirm Password do not match</p>
+            </div>
+            <div class="form-group">
+              <p style="color: red;">{{errorMessage}}</p>
+            </div>
+
+
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary" [disabled]="!registerForm.valid">Register</button>
+            <button type="button" class="btn btn-light" (click)="modal.close('Close click')">Close</button>
+          </div>
+          </form>
+
+        </ng-template>
+
+			</div>
+		</div>
+	</div>
+</div>
+

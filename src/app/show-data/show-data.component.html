@@ -1,0 +1,282 @@
+
+
+<div class="container">
+  <div class="d-flex justify-content-between bg-info shadow">
+    <div class="fs-2 fw-bolder" >Task Details</div>
+    <div class="">
+      <button type="button" class="btn btn-success" (click)="openLg(addquote)">
+        <i class="fas fa-book"></i> Add Task</button>
+    </div>
+  </div>
+  <div class="d-flex">
+    <div>
+      <strong>Show</strong>
+      <select ngModel  #select (change)="display()">
+
+        <option *ngFor="let choice of choices"  [value]="choice" >{{choice}}</option>
+     </select>
+     <strong>Quotes</strong>
+    </div>
+    <div style="margin-left: auto;">
+      <strong>Order By:</strong>
+      <select ngModel  #order (change)="sortDataBySelect()">
+
+        <option *ngFor="let order of orders"  [value]="order" >{{order}}</option>
+     </select>
+     <label for="orderCheck"><strong class="ps-2">Descending:</strong></label>
+     <input  type="checkbox" name="orderCheck" id="orderCheck" #orderCheck>
+
+    </div>
+
+    <div style="margin-right:4%;margin-left: 10px;">
+    <label for="search" class="ms-3" >
+      <strong>Enter keyword to Search:</strong>
+      </label>
+      <input  type="text" name="search" id="search" #input [(ngModel)]="by">
+      <!-- (keyup)="doFilter($event)" -->
+    </div>
+
+  </div>
+
+  <!-- <div class="my-4">
+    <table class='table table-striped'>
+      <thead>
+        <tr>
+          <th>Quote Type</th>
+          <th>Quote#</th>
+          <th>Contact </th>
+          <th>Task</th>
+          <th>Due Date</th>
+          <th>Task Type</th>
+          <th></th>
+
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let quote of quotes">
+          <td>{{quote.QuoteType}}</td>
+          <td>{{quote.QuoteID }}</td>
+
+          <td>{{quote.Contact}}</td>
+          <td>{{quote.Task }}</td>
+          <td>{{quote.DueDate }} </td>
+
+          <td>{{quote.TaskType}}</td>
+          <td>
+            <i class="fa fa-eye fa-1.25x"></i>
+
+            <button class="btn" (click)="openUpdate(updatequote,quote)"    >
+              <i class="fa fa-edit fa-1.25x" ></i>
+            </button>
+
+            <i class="fa fa-comment fa-1.25x" ></i>
+
+            <button class="btn" (click)="openDelete(deleteQuote,quote)">
+              <i class="fa fa-trash fa-1.25x"></i>
+            </button>
+
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div> -->
+
+<div class="my-4">
+  <div class="wrapper" *ngIf="isLoading">
+  <mat-spinner [color]="spinnerColor"></mat-spinner>
+</div>
+  <table *ngIf="!isLoading" mat-table [dataSource]="dataSource" matSort  (matSortChange)="sortData($event)" class="mat-elevation-z8">
+
+    <!-- "(matSortChange)="sortData($event)" -->
+    <ng-container matColumnDef="QuoteType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quote Type </th>
+      <td mat-cell *matCellDef="let element"> {{element.QuoteType}}</td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="QuoteID">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Quote# </th>
+      <td mat-cell *matCellDef="let element">  {{element.QuoteID}}</td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="Contact">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Contact </th>
+      <td mat-cell *matCellDef="let element"> {{element.Contact}} </td>
+    </ng-container>
+
+
+    <ng-container matColumnDef="Task">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Task </th>
+      <td mat-cell *matCellDef="let element"> {{element.Task}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="DueDate">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Due Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.DueDate}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="TaskType">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Task Type </th>
+      <td mat-cell *matCellDef="let element"> {{element.TaskType}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="option">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header disabled></th>
+      <td mat-cell *matCellDef="let element">
+        <button class="btn">
+          <i class="fa fa-eye fa-1.25x" (click)="displayDetail(element)"></i>
+        </button>
+
+        <button class="btn" (click)="openUpdate(updatequote,element)">
+          <i class="fa fa-edit fa-1.25x" ></i></button>
+
+        <button class="btn" (click)="openDelete(deleteQuote,element)">
+          <i class="fa fa-trash fa-1.25x"></i>
+        </button> </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+
+      <tr mat-row (dblclick)="displayDetail(row)" *matRowDef="let row; columns: displayedColumns;"></tr>
+
+
+
+  </table>
+  <mat-paginator [pageSizeOptions]="pageSizeOptions"  (page)="onChangedPage($event)" ></mat-paginator>
+
+</div>
+
+
+
+
+
+
+  <ng-template #addquote let-modal>
+    <form #addquoteForm="ngForm" (ngSubmit)="addQuote(addquoteForm)">
+
+      <div class="modal-header">
+      <h4 class="modal-title">Add Task</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true"><i class="fas fa-window-close"></i></span>
+      </button>
+    </div>
+
+    <div class="modal-body" >
+
+      <div class="form-group">
+        <label for="QuoteID">Quote ID</label>
+        <input type="text" class="form-control" name="QuoteID" ngModel #quoteid="ngModel" required number>
+        <span *ngIf="!quoteid.valid && quoteid.touched" style="color:red"> *required field</span>
+      </div>
+      <div class="form-group">
+        <label for="QuoteType ">Quote Type</label>
+        <input type="text" class="form-control" name="QuoteType" ngModel #quotetype="ngModel" required >
+        <span *ngIf="!quotetype.valid && quotetype.touched" style="color:red"> *required field</span>
+      </div >
+
+
+      <div class="form-group">
+        <label for="Contact ">Contact</label>
+        <input type="text" class="form-control" name="Contact" ngModel #contact="ngModel" required >
+        <span *ngIf="!contact.valid && contact.touched" style="color:red"> *required field</span>
+      </div>
+      <div class="form-group">
+        <label for="Task">Task</label>
+        <input type="text" class="form-control" name="Task" ngModel #task="ngModel" required>
+        <span *ngIf="!task.valid && task.touched" style="color:red"> *required field</span>
+      </div>
+      <div class="form-group">
+        <label for="TaskType ">Task Type</label>
+        <input type="text" class="form-control" name="TaskType" ngModel #tasktype="ngModel" required>
+        <span *ngIf="!tasktype.valid && tasktype.touched" style="color:red"> *required field</span>
+      </div>
+      <div class="form-group mt-3">
+        <label for="DueDate">Due Date: </label>
+        <input type="datetime-local" id="duedate" name="DueDate" ngModel #duedate="ngModel" required>
+        <span *ngIf="!duedate.valid && duedate.touched" style="color:red"> *required field</span>
+
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button  type="submit" class="btn btn-info" [disabled]="!addquoteForm.valid"><i class="fas fa-save"></i> Add</button>
+      <button type="button" class="btn btn-dark" (click)="modal.close('Close click')"><i class="far fa-times-circle"></i> Cancel</button>
+    </div>
+    </form>
+
+  </ng-template>
+
+
+  <!-- update quote -->
+  <ng-template #updatequote let-modal>
+    <form #updatequoteForm="ngForm" (ngSubmit)="updateQuote(quote)">
+
+      <div class="modal-header">
+      <h4 class="modal-title">Edit Task</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true"><i class="fas fa-window-close"></i></span>
+      </button>
+    </div>
+
+    <div class="modal-body" >
+
+      <!-- <div class="form-group">
+        <label for="QuoteID">Quote ID</label>
+        <input type="text" class="form-control" name="QuoteID" ngModel  [(ngModel)]="quote.QuoteID" required>
+      </div> -->
+      <div class="form-group">
+        <label for="QuoteType ">Quote Type</label>
+        <input type="text" class="form-control" name="QuoteType" ngModel  [(ngModel)]="quote.QuoteType" required >
+      </div >
+
+
+      <div class="form-group">
+        <label for="Contact ">Contact</label>
+        <input type="text" class="form-control" name="Contact" ngModel  [(ngModel)]="quote.Contact" required >
+      </div>
+      <div class="form-group">
+        <label for="Task">Task</label>
+        <input type="text" class="form-control" name="Task" ngModel  [(ngModel)]="quote.Task" required>
+      </div>
+      <div class="form-group">
+        <label for="TaskType ">Task Type</label>
+        <input type="text" class="form-control" name="TaskType" ngModel  required [(ngModel)]="quote.TaskType">
+      </div>
+      <div class="form-group mt-3">
+        <label for="DueDate">Due Date: </label>
+        <input type="datetime-local" id="duedate" name="DueDate" ngModel  required [(ngModel)]="quote.DueDate">
+
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button type="submit" class="btn btn-info" [disabled]="!updatequoteForm.valid"><i class="fas fa-save"></i> Update</button>
+      <button type="button" class="btn btn-dark" (click)="modal.close('Close click')"><i class="far fa-times-circle"></i> Cancel</button>
+    </div>
+    </form>
+
+  </ng-template>
+
+
+  <ng-template #deleteQuote let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title">Please Confirm</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true"><i class="fas fa-window-close"></i></span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <p>do you really want to delete this quote?</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-danger" (click)="deleteMyQuote(quote)">Confirm</button>
+      <button type="button" class="btn btn-dark" (click)="modal.close('Close click')"><i class="far fa-times-circle"></i> Close</button>
+    </div>
+  </ng-template>
+
+
+</div>
+
+
